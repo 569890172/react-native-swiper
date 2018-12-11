@@ -1,7 +1,3 @@
-/**
- * react-native-swiper
- * @author leecade<leecade@163.com>
- */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -91,7 +87,8 @@ const styles = {
 
   buttonText: {
     fontSize: 50,
-    color: '#007aff'
+    color: '#007aff',
+    fontFamily: 'Arial'
   }
 }
 
@@ -394,8 +391,6 @@ export default class extends Component {
   updateIndex = (offset, dir, cb) => {
     const state = this.state
     let index = state.index
-    if (!this.internals.offset)   // Android not setting this onLayout first? https://github.com/leecade/react-native-swiper/issues/582
-      this.internals.offset = {}
     const diff = offset[dir] - this.internals.offset[dir]
     const step = dir === 'x' ? state.width : state.height
     let loopJump = false
@@ -621,17 +616,6 @@ export default class extends Component {
     this.scrollView = view;
   }
 
-  onPageScrollStateChanged = state => {
-    switch (state) {
-      case 'dragging':
-        return this.onScrollBegin();
-
-      case 'idle':
-      case 'settling':
-        if (this.props.onTouchEnd) this.props.onTouchEnd();
-    }
-  }
-
   renderScrollView = pages => {
     if (Platform.OS === 'ios') {
       return (
@@ -652,7 +636,6 @@ export default class extends Component {
       <ViewPagerAndroid ref={this.refScrollView}
         {...this.props}
         initialPage={this.props.loop ? this.state.index + 1 : this.state.index}
-        onPageScrollStateChanged={this.onPageScrollStateChanged}
         onPageSelected={this.onScrollEnd}
         key={pages.length}
         style={[styles.wrapperAndroid, this.props.style]}>
